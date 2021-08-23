@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+
+<html class="" lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>SecuritySearch</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+
+<body>
+  <h1>Hello, world.</h1>
+
+  <script>
+    var xmlhttp
+
+    function updateResults() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        resp = JSON.parse(xmlhttp.responseText);
+        document.getElementById("status.x").innerHTML = resp.position.retval.toString();
+      }
+    }
+
+    function readStatus() {
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = updateStatus;
+      xmlhttp.open("GET", "api/status", true);
+      //xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlhttp.send();
+    }
+
+    //setTimeout (readStatus, 1000)
+
+    </script>
+</body>
+</html> 
