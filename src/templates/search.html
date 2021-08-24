@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+
+<html class="" lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <title>SecuritySearch</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+</head>
+<p/>
+<body>
+  <form action="search">
+    <input type="text" id="q" name="q"
+      {% if request.args.get('q') != None %}
+        value="{{ request.args.get('q') }}"
+      {% endif %}
+    />
+    <input type="submit" value="Go"/ style="width:60px">
+    <br/>
+  </form>
+
+  {% if 'q' in request.args %}
+  <p/>
+  Showing results for <b>{{ request.args.get('q')|e }}</b>:
+  {% for providerName in searchProviders.keys() %}
+    <!--
+      TODO: This needs a lot of cleanup. It does not currently 
+      handle multiple responses. Consider a generator function
+      in the searchProvider class that writes the callback script.
+    -->
+    <p/>
+    <a href="{{ searchProviders[providerName].homepage_url }}">{{ searchProviders[providerName].title }}</a>
+    <div id="{{ providerName }}results">&nbsp;</div>
+    <script>
+      var {{ providerName }}xmlhttp
+      function update{{ providerName }}Results() {
+        if ({{ providerName }}xmlhttp.readyState == 4 && {{ providerName }}xmlhttp.status == 200) {
+          json = JSON.parse({{ providerName }}xmlhttp.responseText);
+
+          document.getElementById("{{ providerName }}results").innerHTML = {{ searchProviders[providerName].html_string|safe }};
+
+        }
+      }
+      {{ providerName }}xmlhttp = new XMLHttpRequest();
+      {{ providerName }}xmlhttp.onreadystatechange = update{{ providerName }}Results;
+      {{ providerName }}xmlhttp.open("GET", "{{ searchProviders[providerName].json_url(request.args.get('q')) }}", true);
+      //xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      {{ providerName }}xmlhttp.send();
+
+      </script>
+  
+    {% endfor %}
+  <p/>
+  <i>done.</i>
+  {% endif %}
+
+
+  <script>
+    var xmlhttp
+
+    function updateResults() {
+      if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        resp = JSON.parse(xmlhttp.responseText);
+        document.getElementById("status.x").innerHTML = resp.position.retval.toString();
+      }
+    }
+
+    function readStatus() {
+      xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange = updateStatus;
+      xmlhttp.open("GET", "api/status", true);
+      //xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+      xmlhttp.send();
+    }
+
+    //setTimeout (readStatus, 1000)
+
+    </script>
+</body>
+</html> 
