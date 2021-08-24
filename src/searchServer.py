@@ -22,28 +22,22 @@ import time
 #logging.basicConfig(level=logging.DEBUG,
 #                            format='(%(threadName)-9s) %(message)s',)
 app = Flask(__name__)
-logging.debug ("Created app object")
 
 searchProviders = {}
 
 @app.route('/')
 @app.route('/search')
 def homepage():
-    return render_template ('search.html')
-
-
-@app.route('/api/search')
-def apiStatus():
-    return arm.json_status()
+    return render_template ('search.html', searchProviders=searchProviders)
 
 
 def addSearchProvider (provider):
     if provider.name in searchProviders.keys():
         # only allow a single search provider of each type
         raise KeyError ("Search provider %s has already been added" % (provider.name))
-        return False
     
-    searchProviders['provider.name'] = provider
+    searchProviders[provider.name] = provider
+    logging.debug ("Registered search provider " + provider.name)
     return True
 
 if __name__ == '__main__':
