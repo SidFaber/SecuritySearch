@@ -22,10 +22,10 @@ sudo apt upgrade
 sudo apt install python3-pip
 ```
 
-2. Install flask
+2. Install python dependencies
 
 ```bash
-pip install flask
+pip install -r requirements.txt
 ```
 
 3. Set up your github keys
