@@ -41,3 +41,18 @@ class IpapiSearch (SearchProvider):
             return None
         else:
             return "https://ipapi.co/" + addr + "/json/"
+
+class IpinfoSearch (SearchProvider):
+    def __init__(self):
+        super().__init__("ipinfo", "IPInfo")
+        self.homepage_url = "https://ipinfo.io/"
+        self.html_string = '"<b>"+json.ip+"</b>: Hostname "+json.hostname+"; City "+json.city+"; Region "+json.region+"; Country "+json.country+"; Coords "+json.loc+"; Postal Code "+json.postal+"; Timezone "+json.timezone'
+    
+    def json_url (self, q):
+        addr = normalizeIP(q)
+        if addr is None:
+            return None
+        else:
+            # TODO: Remove hardcoded API token.
+            return "https://ipinfo.io/json/"+addr+"?token=6416bca288f5fe"
+
