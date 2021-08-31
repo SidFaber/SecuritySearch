@@ -14,4 +14,10 @@ jobs:
       - run: echo "The workflow is now ready to test your code on the runner."
       - name: Run flake8
         run: flake8
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - run: sudo apt-get -qq update && sudo apt-get -qq -y install bandit
+      - uses: actions/checkout@v2
+      - run: bandit -r .
 
