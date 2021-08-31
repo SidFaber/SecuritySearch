@@ -43,3 +43,15 @@ git clone git@github.com:SidFaber/SecuritySearch.git
 cd ~/Workspace/SecuritySearch/src/SecuritySearch/src
 ./launch.sh
 ```
+
+## Run source code tests
+
+Use `flake8` to check syntax, and use bandit for some security tests.
+
+```bash
+sudo apt install flake8 bandit
+cd ~/Workspace/SecuritySearch/src/SecuritySearch
+flake8
+bandit -r .
+```
+
