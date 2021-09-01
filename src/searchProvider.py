@@ -1,16 +1,18 @@
 import ipaddress
 
-def normalizeIP (ip_str):
+
+def normalizeIP(ip_str):
     '''
     Return a normalized dotted-quad version of an IP address
     from a string. Return None if the string is not parseable
     as an IP address.
     '''
     try:
-        ip_obj = ipaddress.IPv4Address (ip_str)
+        ip_obj = ipaddress.IPv4Address(ip_str)
     except ipaddress.AddressValueError:
         return None
     return str(ip_obj)
+
 
 # TODO: make name, title, homepage_url read-only properties that
 #   are required when instantiating the object
@@ -25,17 +27,20 @@ class SearchProvider (object):
         self.html_string = "&nbsp;"
 
     def json_url(self, q):
-        raise NotImplemented ("Method json_url is not implemented")
-        
+        raise NotImplementedError("Method json_url is not implemented")
 
 
 class IpapiSearch (SearchProvider):
     def __init__(self):
         super().__init__("ipapi", "IPApi")
         self.homepage_url = "https://ipapi.co/"
-        self.html_string = '"<b>"+json.ip+"</b>: ASN "+json.asn+"; City "+json.city+"; Region "+json.region+"; Country "+json.country'
-    
-    def json_url (self, q):
+        self.html_string = '"<b>"+json.ip+"</b>: ' \
+            'ASN "+json.asn+"; ' \
+            'City "+json.city+"; ' \
+            'Region "+json.region+"; ' \
+            'Country "+json.country'
+
+    def json_url(self, q):
         addr = normalizeIP(q)
         if addr is None:
             return None
